@@ -15,6 +15,12 @@ class MyClass
         name = "Swift programming"
         id = "TH2014"
     }
+    
+    init(name : String, id : String) {
+        self.name = name
+        self.id = id
+    }
+    
     var name : String
     var id : String
 }

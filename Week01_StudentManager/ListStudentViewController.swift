@@ -9,12 +9,9 @@
 import UIKit
 
 class ListStudentViewController : UITableViewController {
-
-    var studentList:[Student]!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        studentList = [Student(), Student(), Student(), Student(), Student()]
+        StudentManager.studentList = [Student(), Student(firstName: "Genius", lastName: "Doan", dateOfBirth: MyDate(), myClass: MyClass(), otherInfo: "Poor me"), Student(), Student(firstName: "Rose",lastName: "Axl", dateOfBirth: MyDate(), myClass: MyClass(), otherInfo: ":D:D:D:D"), Student()]
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -37,7 +34,7 @@ class ListStudentViewController : UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return studentList.count
+        return StudentManager.studentList.count
     }
 
     
@@ -54,12 +51,12 @@ class ListStudentViewController : UITableViewController {
         
         
         var studentName:UILabel = UILabel(frame: CGRect(x: 88, y: 0, width: 240, height: 24))
-        studentName.text = studentList[indexPath.row].lastName
+        studentName.text = StudentManager.studentList[indexPath.row].lastName
         cell.addSubview(studentName)
 
         
         var className:UILabel = UILabel(frame: CGRect(x: 88, y: 32, width: 240, height: 24))
-        className.text = studentList[indexPath.row].myClass.name
+        className.text = StudentManager.studentList[indexPath.row].myClass.name
 
         cell.addSubview(className)
 
@@ -70,6 +67,10 @@ class ListStudentViewController : UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        StudentManager.selectedIndex = indexPath.row
     }
     
 

@@ -17,6 +17,7 @@
 		C2B1A5171E76D4F30013F0A5 /* MyDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B1A5161E76D4F30013F0A5 /* MyDate.swift */; };
 		C2B1A5191E76D5020013F0A5 /* MyClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B1A5181E76D5020013F0A5 /* MyClass.swift */; };
 		C2B1A5221E76E6290013F0A5 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C2B1A5211E76E6290013F0A5 /* logo.png */; };
+		C2B1A5241E76FB470013F0A5 /* StudentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B1A5231E76FB470013F0A5 /* StudentManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		C2B1A5161E76D4F30013F0A5 /* MyDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyDate.swift; sourceTree = "<group>"; };
 		C2B1A5181E76D5020013F0A5 /* MyClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyClass.swift; sourceTree = "<group>"; };
 		C2B1A5211E76E6290013F0A5 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		C2B1A5231E76FB470013F0A5 /* StudentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 				C2B1A5141E76D3B10013F0A5 /* Student.swift */,
 				C2B1A5161E76D4F30013F0A5 /* MyDate.swift */,
 				C2B1A5181E76D5020013F0A5 /* MyClass.swift */,
+				C2B1A5231E76FB470013F0A5 /* StudentManager.swift */,
 			);
 			path = Week01_StudentManager;
 			sourceTree = "<group>";
@@ -162,6 +165,7 @@
 			files = (
 				C2B1A5191E76D5020013F0A5 /* MyClass.swift in Sources */,
 				C2B1A5031E76CA0B0013F0A5 /* DetailViewController.swift in Sources */,
+				C2B1A5241E76FB470013F0A5 /* StudentManager.swift in Sources */,
 				C2B1A5171E76D4F30013F0A5 /* MyDate.swift in Sources */,
 				C2B1A5131E76D2850013F0A5 /* ListStudentViewController.swift in Sources */,
 				C2B1A5011E76CA0B0013F0A5 /* AppDelegate.swift in Sources */,

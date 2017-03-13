@@ -16,6 +16,13 @@ class MyDate
         month = "1"
         year = "1996"
     }
+    
+    init(day : String, month : String, year : String) {
+        self.day = day
+        self.month = month
+        self.year = year
+    }
+    
     var day : String
     var month : String
     var year : String
