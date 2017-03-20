@@ -12,8 +12,8 @@ class MyClass
 {
     init()
     {
-        name = "Swift programming"
-        id = "TH2014"
+        self.id = StudentManager.classList[2].id
+        self.name = StudentManager.classList[2].name
     }
     
     init(name : String, id : String) {
