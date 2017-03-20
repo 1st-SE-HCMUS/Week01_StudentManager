@@ -23,4 +23,8 @@ class MyClass
     
     var name : String
     var id : String
+    
+    func getIdNumber() -> Int? {
+        return Int(id)
+    }
 }

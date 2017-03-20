@@ -13,6 +13,8 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     var selectedIndex: Int = 3
     static let MODE_ADD:Int = 0;
     static let MODE_EDIT:Int = 1;
+    var manager:StudentManager = StudentManager()
+    
     
     @IBOutlet weak var myTableView: UITableView!
     
@@ -25,8 +27,12 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         myTableView.delegate = self
         myTableView.dataSource = self
         
-        
-        StudentManager.studentList = [Student(), Student(firstName: "Genius", lastName: "Doan", dateOfBirth: MyDate(), myClass: StudentManager.classList[0], otherInfo: "Poor me"), Student(), Student(firstName: "Rose",lastName: "Axl", dateOfBirth: MyDate(), myClass: StudentManager.classList[1], otherInfo: ":D:D:D:D"), Student()]
+        manager = StudentManager()
+        manager.addStudent(student: Student(firstName: "Tiki",lastName: "Axl", dateOfBirth: MyDate(), myClass: StudentManager.classList[2], otherInfo: ":? ???ß"))
+        manager.addStudent(student: Student(firstName: "Genius", lastName: "Doan", dateOfBirth: MyDate(), myClass: StudentManager.classList[0], otherInfo: "Poor me"))
+        manager.addStudent(student: Student())
+        manager.addStudent(student: Student(firstName: "Rose",lastName: "Axl", dateOfBirth: MyDate(), myClass: StudentManager.classList[1], otherInfo: ":D:D:D:D"))
+        manager.addStudent(student: Student())
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -43,11 +49,11 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     func saveData(student: Student, studentIndex: Int?, mode: Int?) {
         //Get student
         if mode == ListStudentViewController.MODE_EDIT {
-            StudentManager.studentList[studentIndex!] = student
+            manager.updateStudent(student: student, index: studentIndex!)
         }
         else
         {
-            StudentManager.studentList.append(student)
+            manager.addStudent(student: student)
         }
         myTableView.reloadData()
     }
@@ -61,7 +67,7 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return StudentManager.studentList.count
+        return manager.getStudentList().count
     }
 
     
@@ -69,25 +75,27 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
 
         // Configure the cell...
-        var logoImg:UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+        let logoImg:UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
         logoImg.image = UIImage(named: "logo.png")
         logoImg.contentMode = UIViewContentMode.scaleAspectFill
+        logoImg.layer.borderColor = UIColor(red: 231, green: 0, blue: 0, alpha: 1.0).cgColor
+        logoImg.layer.borderWidth = 1
         logoImg.clipsToBounds = true
     
         cell.addSubview(logoImg)
         
         
-        var studentName:UILabel = UILabel(frame: CGRect(x: 88, y: 0, width: 240, height: 24))
-        studentName.text = StudentManager.studentList[indexPath.row].lastName
+        let studentName:UILabel = UILabel(frame: CGRect(x: 88, y: 0, width: 240, height: 24))
+        studentName.text = manager.getStudent(index: indexPath.row).firstName
         cell.addSubview(studentName)
 
         
-        var className:UILabel = UILabel(frame: CGRect(x: 88, y: 32, width: 240, height: 24))
-        className.text = StudentManager.studentList[indexPath.row].myClass.name
+        let className:UILabel = UILabel(frame: CGRect(x: 88, y: 32, width: 240, height: 24))
+        className.text = manager.getStudent(index: indexPath.row).myClass.name
 
         cell.addSubview(className)
 
-        
+        cell.backgroundColor = UIColor(red: 224, green: 247, blue: 250, alpha: 1.0)
         
         return cell
     }
@@ -110,7 +118,7 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
             if let indexPath = myTableView.indexPathForSelectedRow {
                 selectedIndex = indexPath.row
                 let dest = segue.destination as! DetailViewController
-                dest.myStudent = StudentManager.studentList[selectedIndex]
+                dest.myStudent = manager.getStudent(index: selectedIndex)
                 dest.studentIndex = selectedIndex
                 dest.mode = ListStudentViewController.MODE_EDIT
                 dest.delegate = self
@@ -141,7 +149,7 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            StudentManager.studentList.remove(at: indexPath.row)
+            manager.removeStudent(index: indexPath.row)
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
             
@@ -154,9 +162,9 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-        var temp:Student = StudentManager.studentList[fromIndexPath.row]
-        StudentManager.studentList.remove(at: fromIndexPath.row)
-        StudentManager.studentList.insert(temp, at: to.row)
+        var temp:Student = manager.getStudent(index: fromIndexPath.row)
+        manager.removeStudent(index: fromIndexPath.row)
+        manager.insertStudent(student: temp, index: to.row)
     }
     
     

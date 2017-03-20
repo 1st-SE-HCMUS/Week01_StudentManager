@@ -15,6 +15,7 @@ protocol DetailVCDelegate : class {
 class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var myStudent:Student?
+    var myClass: MyClass = MyClass()
     var studentIndex: Int?
     var mode: Int?
     var isEditting:Bool = false
@@ -34,41 +35,26 @@ class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     @IBOutlet weak var datePicker: UIDatePicker!
     
     @IBAction func btnBack(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        _ = navigationController?.popViewController(animated: true)
     }
     
     
     @IBAction func btnSave(_ sender: UIButton) {
         if mode == ListStudentViewController.MODE_ADD {
-            myStudent = Student(firstName: edFirstNam.text!, lastName: edLastName.text!, dateOfBirth: MyDate(), myClass: MyClass(), otherInfo: edOtherInfo.text!)
-            
-            if delegate != nil {
-                delegate?.saveData(student: myStudent!, studentIndex: studentIndex, mode: mode)
-            }
-            
-            self.dismiss(animated: true, completion: nil)
+            saveDataAndDismiss()
+            _ = navigationController?.popViewController(animated: true)
+
         }
         else
         {
             if isEditting {
-                myStudent = Student(firstName: edFirstNam.text!, lastName: edLastName.text!, dateOfBirth: MyDate(), myClass: MyClass(), otherInfo: edOtherInfo.text!)
-                
-                if delegate != nil {
-                    delegate?.saveData(student: myStudent!, studentIndex: studentIndex, mode: mode)
-                }
-                
-                self.dismiss(animated: true, completion: nil)
+                saveDataAndDismiss()
+                _ = navigationController?.popViewController(animated: true)
+
             }
             else
             {
-                btnSave.setTitle("Save", for: .normal)
-                edFirstNam.isUserInteractionEnabled = true
-                edLastName.isUserInteractionEnabled = true
-                classPicker.isUserInteractionEnabled = true
-                edOtherInfo.isUserInteractionEnabled = true
-                datePicker.isUserInteractionEnabled = true
-                
-                isEditting = true
+               enableViewForEditting()
             }
         }
         
@@ -81,8 +67,15 @@ class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerView
             edFirstNam.text = myStudent!.firstName
             edLastName.text = myStudent!.lastName
             edOtherInfo.text = myStudent!.otherInfo
-            classPicker.selectRow(Int((myStudent?.myClass.id)!)! - 1, inComponent: 0, animated: true)
+            let classIndex = (myStudent?.myClass.getIdNumber())! - 1
+            classPicker.selectRow(classIndex, inComponent: 0, animated: true)
+            myClass = myStudent!.myClass
             btnSave.setTitle("Edit", for: .normal)
+        }
+        else
+        {
+            enableViewForEditting()
+            myClass = StudentManager.classList[0]
         }
     }
     
@@ -107,6 +100,30 @@ class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         return StudentManager.classList[row].name
     }
     
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        myClass = StudentManager.classList[row]
+    }
+    
+    func enableViewForEditting() {
+        btnSave.setTitle("Save", for: .normal)
+        edFirstNam.isUserInteractionEnabled = true
+        edLastName.isUserInteractionEnabled = true
+        classPicker.isUserInteractionEnabled = true
+        edOtherInfo.isUserInteractionEnabled = true
+        datePicker.isUserInteractionEnabled = true
+        
+        isEditting = true
+    }
+    
+    func saveDataAndDismiss() {
+        myStudent = Student(firstName: edFirstNam.text!, lastName: edLastName.text!, dateOfBirth: MyDate(), myClass: myClass, otherInfo: edOtherInfo.text!)
+        
+        if delegate != nil {
+            delegate?.saveData(student: myStudent!, studentIndex: studentIndex, mode: mode)
+        }
+        
+        //self.dismiss(animated: true, completion: nil)
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
