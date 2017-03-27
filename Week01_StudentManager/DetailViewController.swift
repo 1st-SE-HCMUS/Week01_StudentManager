@@ -116,13 +116,12 @@ class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     }
     
     func saveDataAndDismiss() {
-        myStudent = Student(firstName: edFirstNam.text!, lastName: edLastName.text!, dateOfBirth: MyDate(), myClass: myClass, otherInfo: edOtherInfo.text!)
+        var date = MyDate()
+        myStudent = Student(firstName: edFirstNam.text!, lastName: edLastName.text!, dateOfBirth: date, myClass: myClass, otherInfo: edOtherInfo.text!)
         
         if delegate != nil {
             delegate?.saveData(student: myStudent!, studentIndex: studentIndex, mode: mode)
         }
-        
-        //self.dismiss(animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

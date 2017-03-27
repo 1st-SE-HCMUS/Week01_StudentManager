@@ -12,18 +12,18 @@ import Foundation
 class MyDate
 {
     init() {
-        day = "1"
-        month = "1"
-        year = "1996"
+        day = 1
+        month = 1
+        year = 1996
     }
     
-    init(day : String, month : String, year : String) {
+    init(day : Int, month : Int, year : Int) {
         self.day = day
         self.month = month
         self.year = year
     }
     
-    var day : String
-    var month : String
-    var year : String
+    var day : Int
+    var month : Int
+    var year : Int
 }

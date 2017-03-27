@@ -170,7 +170,7 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Cell" id="S2U-yB-h17">
-                                <rect key="frame" x="0.0" y="56" width="667" height="44"/>
+                                <rect key="frame" x="0.0" y="55.5" width="667" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="S2U-yB-h17" id="Wtq-fb-bAl">
                                     <rect key="frame" x="0.0" y="0.0" width="634" height="43"/>

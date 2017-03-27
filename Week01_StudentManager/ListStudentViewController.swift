@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import  CoreData
 
 class ListStudentViewController : UITableViewController, DetailVCDelegate {
     
@@ -14,6 +15,10 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     static let MODE_ADD:Int = 0;
     static let MODE_EDIT:Int = 1;
     var manager:StudentManager = StudentManager()
+    var appDelegate:AppDelegate?
+    var objectContext:NSManagedObjectContext = NSManagedObjectContext()
+    var fetchRequest:NSFetchRequest<ClassStudent> = NSFetchRequest<ClassStudent>(entityName: "ClassStudent")
+    
     
     
     @IBOutlet weak var myTableView: UITableView!
@@ -26,13 +31,35 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         super.viewDidLoad()
         myTableView.delegate = self
         myTableView.dataSource = self
+        appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         manager = StudentManager()
-        manager.addStudent(student: Student(firstName: "Tiki",lastName: "Axl", dateOfBirth: MyDate(), myClass: StudentManager.classList[2], otherInfo: ":? ???ß"))
-        manager.addStudent(student: Student(firstName: "Genius", lastName: "Doan", dateOfBirth: MyDate(), myClass: StudentManager.classList[0], otherInfo: "Poor me"))
-        manager.addStudent(student: Student())
-        manager.addStudent(student: Student(firstName: "Rose",lastName: "Axl", dateOfBirth: MyDate(), myClass: StudentManager.classList[1], otherInfo: ":D:D:D:D"))
-        manager.addStudent(student: Student())
+        objectContext = (appDelegate?.persistentContainer.viewContext)!
+            
+        fetchRequest.returnsObjectsAsFaults = false
+        
+        do {
+            var students = try objectContext.fetch(fetchRequest)
+            
+            for student in students {
+                print(student)
+            }
+            
+            manager.fetchStudentFromDb(studentArray: students)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        
+        
+        /*
+        let entity =
+            NSEntityDescription.entity(forEntityName: "ClassStudent",
+                                       in: context)!
+        let studentMO = NSManagedObject(entity: entity,
+                                     insertInto: context)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ClassStudent")
+        fetchRequest.returnsObjectsAsFaults = false
+        */
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -50,10 +77,12 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         //Get student
         if mode == ListStudentViewController.MODE_EDIT {
             manager.updateStudent(student: student, index: studentIndex!)
+            manager.updateStudentFromDb(editedIndex: studentIndex!, delegate: appDelegate!, context: objectContext, request: fetchRequest)
         }
         else
         {
             manager.addStudent(student: student)
+            manager.addStudentToDb(newStudent: student, delegate: appDelegate!, context: objectContext)
         }
         myTableView.reloadData()
     }
@@ -75,27 +104,52 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
 
         // Configure the cell...
-        let logoImg:UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
-        logoImg.image = UIImage(named: "logo.png")
-        logoImg.contentMode = UIViewContentMode.scaleAspectFill
-        logoImg.layer.borderColor = UIColor(red: 231, green: 0, blue: 0, alpha: 1.0).cgColor
-        logoImg.layer.borderWidth = 1
-        logoImg.clipsToBounds = true
-    
-        cell.addSubview(logoImg)
-        
-        
-        let studentName:UILabel = UILabel(frame: CGRect(x: 88, y: 0, width: 240, height: 24))
-        studentName.text = manager.getStudent(index: indexPath.row).firstName
-        cell.addSubview(studentName)
+        if let studentName = cell.viewWithTag(100) as? UILabel
+        {
+            let logoImg = cell.viewWithTag(101) as! UIImageView
+            logoImg.image = UIImage(named: "logo.png")
+            logoImg.contentMode = UIViewContentMode.scaleAspectFill
+            logoImg.layer.borderColor = UIColor(red: 231, green: 0, blue: 0, alpha: 1.0).cgColor
+            logoImg.layer.borderWidth = 1
+            logoImg.clipsToBounds = true
+            
+            cell.addSubview(logoImg)
+            
+            studentName.text = manager.getStudent(index: indexPath.row).firstName
+            let className = cell.viewWithTag(102) as! UILabel
+            className.text = manager.getStudent(index: indexPath.row).myClass.name
+            
+            cell.addSubview(className)
+            
+            cell.backgroundColor = UIColor(red: 224, green: 247, blue: 250, alpha: 1.0)
+        }
+        else {
+            let logoImg:UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+            logoImg.image = UIImage(named: "logo.png")
+            logoImg.contentMode = UIViewContentMode.scaleAspectFill
+            logoImg.layer.borderColor = UIColor(red: 231, green: 0, blue: 0, alpha: 1.0).cgColor
+            logoImg.layer.borderWidth = 1
+            logoImg.clipsToBounds = true
+            logoImg.tag = 101
+            
+            cell.addSubview(logoImg)
+            
+            
+            let studentName:UILabel = UILabel(frame: CGRect(x: 88, y: 0, width: 240, height: 24))
+            studentName.text = manager.getStudent(index: indexPath.row).firstName
+            studentName.tag = 100
+            cell.addSubview(studentName)
+            
+            
+            let className:UILabel = UILabel(frame: CGRect(x: 88, y: 32, width: 240, height: 24))
+            className.text = manager.getStudent(index: indexPath.row).myClass.name
+            className.tag = 102
+            
+            cell.addSubview(className)
+            
+            cell.backgroundColor = UIColor(red: 224, green: 247, blue: 250, alpha: 1.0)
 
-        
-        let className:UILabel = UILabel(frame: CGRect(x: 88, y: 32, width: 240, height: 24))
-        className.text = manager.getStudent(index: indexPath.row).myClass.name
-
-        cell.addSubview(className)
-
-        cell.backgroundColor = UIColor(red: 224, green: 247, blue: 250, alpha: 1.0)
+        }
         
         return cell
     }
@@ -105,35 +159,6 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-    }
-    
-
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        if segue.identifier == "detailItemVC" {
-            if let indexPath = myTableView.indexPathForSelectedRow {
-                selectedIndex = indexPath.row
-                let dest = segue.destination as! DetailViewController
-                dest.myStudent = manager.getStudent(index: selectedIndex)
-                dest.studentIndex = selectedIndex
-                dest.mode = ListStudentViewController.MODE_EDIT
-                dest.delegate = self
-            }
-            
-        }
-        
-        if segue.identifier == "addItemVC" {
-                //selectedIndex = indexPath.row
-                let dest = segue.destination as! DetailViewController
-                //dest.myStudent = StudentManager.studentList[selectedIndex]
-                //dest.studentIndex = selectedIndex
-                dest.mode = ListStudentViewController.MODE_ADD
-                dest.delegate = self
-        }
     }
 
 
@@ -153,6 +178,7 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
             
+            manager.deleteStudentFromDb(deletedIndex:indexPath.row, delegate: appDelegate!, context: objectContext, request: fetchRequest)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
@@ -165,6 +191,10 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         var temp:Student = manager.getStudent(index: fromIndexPath.row)
         manager.removeStudent(index: fromIndexPath.row)
         manager.insertStudent(student: temp, index: to.row)
+        
+        //Update Core Data
+        manager.updateAllStudentFromDb(delegate: appDelegate!, context: objectContext, request: fetchRequest)
+
     }
     
     
@@ -175,15 +205,34 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         return true
     }
     
-
-    /*
+    
+    
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "detailItemVC" {
+            if let indexPath = myTableView.indexPathForSelectedRow {
+                selectedIndex = indexPath.row
+                let dest = segue.destination as! DetailViewController
+                dest.myStudent = manager.getStudent(index: selectedIndex)
+                dest.studentIndex = selectedIndex
+                dest.mode = ListStudentViewController.MODE_EDIT
+                dest.delegate = self
+            }
+            
+        }
+        
+        if segue.identifier == "addItemVC" {
+            //selectedIndex = indexPath.row
+            let dest = segue.destination as! DetailViewController
+            //dest.myStudent = StudentManager.studentList[selectedIndex]
+            //dest.studentIndex = selectedIndex
+            dest.mode = ListStudentViewController.MODE_ADD
+            dest.delegate = self
+        }
     }
-    */
 
 }
