@@ -14,10 +14,10 @@ protocol DetailVCDelegate : class {
 
 class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
-    var myStudent:Student?
-    var myClass: MyClass = MyClass()
+    var currStudent:Student?
+    var currClass: MyClass = MyClass()
     var studentIndex: Int?
-    var mode: Int?
+    var viewMode: Int?
     var isEditting:Bool = false
     
     weak var delegate : DetailVCDelegate?
@@ -34,48 +34,45 @@ class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     
     @IBOutlet weak var datePicker: UIDatePicker!
     
-    @IBAction func btnBack(_ sender: Any) {
-        _ = navigationController?.popViewController(animated: true)
-    }
-    
-    
-    @IBAction func btnSave(_ sender: UIButton) {
-        if mode == ListStudentViewController.MODE_ADD {
+    @IBAction func btnSaveTapped(_ sender: UIButton) {
+        if viewMode == ListStudentViewController.MODE_ADD {
             saveDataAndDismiss()
             _ = navigationController?.popViewController(animated: true)
-
         }
         else
         {
             if isEditting {
                 saveDataAndDismiss()
                 _ = navigationController?.popViewController(animated: true)
-
             }
             else
             {
-               enableViewForEditting()
+                enableViewForEditting()
             }
         }
-        
+    }
+    
+    
+    @IBAction func btnBackTapped(_ sender: UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
-        if (mode == ListStudentViewController.MODE_EDIT)
+        if (viewMode == ListStudentViewController.MODE_EDIT)
         {
-            edFirstNam.text = myStudent!.firstName
-            edLastName.text = myStudent!.lastName
-            edOtherInfo.text = myStudent!.otherInfo
-            let classIndex = (myStudent?.myClass.getIdNumber())! - 1
+            edFirstNam.text = currStudent!.firstName
+            edLastName.text = currStudent!.lastName
+            edOtherInfo.text = currStudent!.otherInfo
+            let classIndex = (currStudent?.myClass.getIdNumber())! - 1
             classPicker.selectRow(classIndex, inComponent: 0, animated: true)
-            myClass = myStudent!.myClass
+            currClass = currStudent!.myClass
             
             // Specify date components
             var dateComponents = DateComponents()
-            dateComponents.year = myStudent?.dateOfBirth.year
-            dateComponents.month = myStudent?.dateOfBirth.month
-            dateComponents.day = myStudent?.dateOfBirth.day
+            dateComponents.year = currStudent?.dateOfBirth.year
+            dateComponents.month = currStudent?.dateOfBirth.month
+            dateComponents.day = currStudent?.dateOfBirth.day
             
             // Create date from components
             let userCalendar = Calendar(identifier: .gregorian)
@@ -86,7 +83,7 @@ class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         else
         {
             enableViewForEditting()
-            myClass = StudentManager.classList[0]
+            currClass = StudentManager.classList[0]
         }
     }
     
@@ -112,7 +109,7 @@ class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        myClass = StudentManager.classList[row]
+        currClass = StudentManager.classList[row]
     }
     
     func enableViewForEditting() {
@@ -128,15 +125,15 @@ class DetailViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     
     func saveDataAndDismiss() {
         let myCalendar = Calendar(identifier: .gregorian)
-        var birthDate = myCalendar.component(.day, from: datePicker.date)
-        var birthMonth = myCalendar.component(.month, from: datePicker.date)
-        var birthYear = myCalendar.component(.year, from: datePicker.date)
-        var date = MyDate(day: birthDate, month: birthMonth, year: birthYear)
+        let birthDate = myCalendar.component(.day, from: datePicker.date)
+        let birthMonth = myCalendar.component(.month, from: datePicker.date)
+        let birthYear = myCalendar.component(.year, from: datePicker.date)
+        let date = MyDate(day: birthDate, month: birthMonth, year: birthYear)
         
-        myStudent = Student(firstName: edFirstNam.text!, lastName: edLastName.text!, dateOfBirth: date, myClass: myClass, otherInfo: edOtherInfo.text!)
+        currStudent = Student(firstName: edFirstNam.text!, lastName: edLastName.text!, dateOfBirth: date, myClass: currClass, otherInfo: edOtherInfo.text!)
         
         if delegate != nil {
-            delegate?.saveData(student: myStudent!, studentIndex: studentIndex, mode: mode)
+            delegate?.saveData(student: currStudent!, studentIndex: studentIndex, mode: viewMode)
         }
     }
     

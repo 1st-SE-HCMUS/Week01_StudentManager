@@ -11,6 +11,7 @@ import Foundation
 class Student
 {
     init() {
+        self.id = UUID().uuidString
         firstName = "Tam"
         lastName = "Doan Hieu"
         dateOfBirth = MyDate()
@@ -19,6 +20,7 @@ class Student
     }
     
     init(firstName : String, lastName : String, dateOfBirth : MyDate, myClass : MyClass, otherInfo : String) {
+        self.id = UUID().uuidString
         self.firstName = firstName
         self.lastName = lastName
         self.dateOfBirth = dateOfBirth
@@ -26,6 +28,7 @@ class Student
         self.otherInfo = otherInfo
     }
     
+    var id: String
     var firstName : String
     var lastName : String
     var dateOfBirth : MyDate

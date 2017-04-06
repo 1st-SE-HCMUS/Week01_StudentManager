@@ -14,11 +14,10 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     var selectedIndex: Int = 3
     static let MODE_ADD:Int = 0;
     static let MODE_EDIT:Int = 1;
-    var manager:StudentManager = StudentManager()
+    var manager:StudentManager = StudentManager(dbName: "studentManager.db")
     var appDelegate:AppDelegate?
     var objectContext:NSManagedObjectContext = NSManagedObjectContext()
     var fetchRequest:NSFetchRequest<ClassStudent> = NSFetchRequest<ClassStudent>(entityName: "ClassStudent")
-    
     
     
     @IBOutlet weak var myTableView: UITableView!
@@ -33,33 +32,12 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         myTableView.dataSource = self
         appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        manager = StudentManager()
+        manager = StudentManager(dbName: "studentManager.db")
         objectContext = (appDelegate?.persistentContainer.viewContext)!
             
         fetchRequest.returnsObjectsAsFaults = false
         
-        do {
-            var students = try objectContext.fetch(fetchRequest)
-            
-            for student in students {
-                print(student)
-            }
-            
-            manager.fetchStudentFromDb(studentArray: students)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        
-        
-        /*
-        let entity =
-            NSEntityDescription.entity(forEntityName: "ClassStudent",
-                                       in: context)!
-        let studentMO = NSManagedObject(entity: entity,
-                                     insertInto: context)
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ClassStudent")
-        fetchRequest.returnsObjectsAsFaults = false
-        */
+        manager.fetchStudentFromDb()
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -74,15 +52,16 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     }
     
     func saveData(student: Student, studentIndex: Int?, mode: Int?) {
-        //Get student
+        //Get student from protocol callback
         if mode == ListStudentViewController.MODE_EDIT {
-            manager.updateStudent(student: student, index: studentIndex!)
-            manager.updateStudentFromDb(editedIndex: studentIndex!, delegate: appDelegate!, context: objectContext, request: fetchRequest)
+            manager.updateStudent(newStudent: student, index: studentIndex!)
+            manager.updateStudentToDb(editedIndex: studentIndex!)
         }
         else
         {
-            manager.addStudent(student: student)
-            manager.addStudentToDb(newStudent: student, delegate: appDelegate!, context: objectContext)
+            //Add new student
+            manager.addStudent(newStudent: student)
+            manager.addStudentToDb(newStudent: student)
         }
         myTableView.reloadData()
     }
@@ -104,6 +83,7 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
 
         // Configure the cell...
+        //Set tag for uiview to retrieve them for later use, and not overlap content in uitableview
         if let studentName = cell.viewWithTag(100) as? UILabel
         {
             let logoImg = cell.viewWithTag(101) as! UIImageView
@@ -113,12 +93,11 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
             logoImg.layer.borderWidth = 1
             logoImg.clipsToBounds = true
             
-            cell.addSubview(logoImg)
-            
             studentName.text = manager.getStudent(index: indexPath.row).firstName
             let className = cell.viewWithTag(102) as! UILabel
             className.text = manager.getStudent(index: indexPath.row).myClass.name
             
+            cell.addSubview(logoImg)
             cell.addSubview(className)
             
             cell.backgroundColor = UIColor(red: 224, green: 247, blue: 250, alpha: 1.0)
@@ -132,19 +111,16 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
             logoImg.clipsToBounds = true
             logoImg.tag = 101
             
-            cell.addSubview(logoImg)
-            
-            
             let studentName:UILabel = UILabel(frame: CGRect(x: 88, y: 0, width: 240, height: 24))
             studentName.text = manager.getStudent(index: indexPath.row).firstName
             studentName.tag = 100
             cell.addSubview(studentName)
             
-            
             let className:UILabel = UILabel(frame: CGRect(x: 88, y: 32, width: 240, height: 24))
             className.text = manager.getStudent(index: indexPath.row).myClass.name
             className.tag = 102
             
+            cell.addSubview(logoImg)
             cell.addSubview(className)
             
             cell.backgroundColor = UIColor(red: 224, green: 247, blue: 250, alpha: 1.0)
@@ -174,11 +150,12 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            //Update CoreData
+            manager.deleteStudentFromDb(deletedIndex:indexPath.row)
             manager.removeStudent(index: indexPath.row)
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
             
-            manager.deleteStudentFromDb(deletedIndex:indexPath.row, delegate: appDelegate!, context: objectContext, request: fetchRequest)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
@@ -188,13 +165,12 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
     
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-        var temp:Student = manager.getStudent(index: fromIndexPath.row)
+        let temp:Student = manager.getStudent(index: fromIndexPath.row)
         manager.removeStudent(index: fromIndexPath.row)
-        manager.insertStudent(student: temp, index: to.row)
+        manager.insertStudent(newStudent: temp, index: to.row)
         
         //Update Core Data
-        manager.updateAllStudentFromDb(delegate: appDelegate!, context: objectContext, request: fetchRequest)
-
+        manager.updateAllStudentToDb()
     }
     
     
@@ -204,6 +180,10 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
         // Return false if you do not want the item to be re-orderable.
         return true
     }
+    
+    
+    
+    
     
     
     
@@ -217,9 +197,9 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
             if let indexPath = myTableView.indexPathForSelectedRow {
                 selectedIndex = indexPath.row
                 let dest = segue.destination as! DetailViewController
-                dest.myStudent = manager.getStudent(index: selectedIndex)
+                dest.currStudent = manager.getStudent(index: selectedIndex)
                 dest.studentIndex = selectedIndex
-                dest.mode = ListStudentViewController.MODE_EDIT
+                dest.viewMode = ListStudentViewController.MODE_EDIT
                 dest.delegate = self
             }
             
@@ -230,7 +210,7 @@ class ListStudentViewController : UITableViewController, DetailVCDelegate {
             let dest = segue.destination as! DetailViewController
             //dest.myStudent = StudentManager.studentList[selectedIndex]
             //dest.studentIndex = selectedIndex
-            dest.mode = ListStudentViewController.MODE_ADD
+            dest.viewMode = ListStudentViewController.MODE_ADD
             dest.delegate = self
         }
     }

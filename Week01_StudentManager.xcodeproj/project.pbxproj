@@ -10,6 +10,7 @@
 		C2495AEB1E88180B0035381D /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C2495AE91E88180B0035381D /* Model.xcdatamodeld */; };
 		C29322981E893C670082FD9C /* ClassStudent+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29322961E893C670082FD9C /* ClassStudent+CoreDataClass.swift */; };
 		C29322991E893C670082FD9C /* ClassStudent+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29322971E893C670082FD9C /* ClassStudent+CoreDataProperties.swift */; };
+		C297EEC81E966A2E0026C7B1 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C297EEC71E966A2E0026C7B1 /* CoreDataHelper.swift */; };
 		C2B1A5011E76CA0B0013F0A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B1A5001E76CA0B0013F0A5 /* AppDelegate.swift */; };
 		C2B1A5031E76CA0B0013F0A5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B1A5021E76CA0B0013F0A5 /* DetailViewController.swift */; };
 		C2B1A5061E76CA0B0013F0A5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2B1A5041E76CA0B0013F0A5 /* Main.storyboard */; };
@@ -21,12 +22,15 @@
 		C2B1A5191E76D5020013F0A5 /* MyClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B1A5181E76D5020013F0A5 /* MyClass.swift */; };
 		C2B1A5221E76E6290013F0A5 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C2B1A5211E76E6290013F0A5 /* logo.png */; };
 		C2B1A5241E76FB470013F0A5 /* StudentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B1A5231E76FB470013F0A5 /* StudentManager.swift */; };
+		C2F0FC221E93AE7A0024561F /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F0FC211E93AE7A0024561F /* libsqlite3.tbd */; };
+		C2F0FC251E93F2AB0024561F /* SQLiteHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F0FC241E93F2AB0024561F /* SQLiteHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C2495AEA1E88180B0035381D /* Model.xcdatamodel */ = {isa = PBXFileReference; explicitFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		C29322961E893C670082FD9C /* ClassStudent+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ClassStudent+CoreDataClass.swift"; path = "Week01_StudentManager/ClassStudent+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C29322971E893C670082FD9C /* ClassStudent+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ClassStudent+CoreDataProperties.swift"; path = "Week01_StudentManager/ClassStudent+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C297EEC71E966A2E0026C7B1 /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		C2B1A4FD1E76CA0B0013F0A5 /* Week01_StudentManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Week01_StudentManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2B1A5001E76CA0B0013F0A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C2B1A5021E76CA0B0013F0A5 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -40,6 +44,9 @@
 		C2B1A5181E76D5020013F0A5 /* MyClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyClass.swift; sourceTree = "<group>"; };
 		C2B1A5211E76E6290013F0A5 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		C2B1A5231E76FB470013F0A5 /* StudentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentManager.swift; sourceTree = "<group>"; };
+		C2F0FC211E93AE7A0024561F /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		C2F0FC231E93AFF10024561F /* StudentMangager_Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StudentMangager_Bridging_Header.h; sourceTree = "<group>"; };
+		C2F0FC241E93F2AB0024561F /* SQLiteHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2F0FC221E93AE7A0024561F /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +69,7 @@
 				C2495AE91E88180B0035381D /* Model.xcdatamodeld */,
 				C2B1A4FF1E76CA0B0013F0A5 /* Week01_StudentManager */,
 				C2B1A4FE1E76CA0B0013F0A5 /* Products */,
+				C2F0FC201E93AE790024561F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,6 +84,7 @@
 		C2B1A4FF1E76CA0B0013F0A5 /* Week01_StudentManager */ = {
 			isa = PBXGroup;
 			children = (
+				C2F0FC231E93AFF10024561F /* StudentMangager_Bridging_Header.h */,
 				C2B1A5211E76E6290013F0A5 /* logo.png */,
 				C2B1A51A1E76DE550013F0A5 /* SupportingFiles */,
 				C2B1A5001E76CA0B0013F0A5 /* AppDelegate.swift */,
@@ -88,6 +98,8 @@
 				C2B1A5161E76D4F30013F0A5 /* MyDate.swift */,
 				C2B1A5181E76D5020013F0A5 /* MyClass.swift */,
 				C2B1A5231E76FB470013F0A5 /* StudentManager.swift */,
+				C2F0FC241E93F2AB0024561F /* SQLiteHelper.swift */,
+				C297EEC71E966A2E0026C7B1 /* CoreDataHelper.swift */,
 			);
 			path = Week01_StudentManager;
 			sourceTree = "<group>";
@@ -97,6 +109,14 @@
 			children = (
 			);
 			name = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		C2F0FC201E93AE790024561F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C2F0FC211E93AE7A0024561F /* libsqlite3.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C29322991E893C670082FD9C /* ClassStudent+CoreDataProperties.swift in Sources */,
+				C297EEC81E966A2E0026C7B1 /* CoreDataHelper.swift in Sources */,
 				C2B1A5191E76D5020013F0A5 /* MyClass.swift in Sources */,
 				C2B1A5031E76CA0B0013F0A5 /* DetailViewController.swift in Sources */,
 				C29322981E893C670082FD9C /* ClassStudent+CoreDataClass.swift in Sources */,
@@ -182,6 +203,7 @@
 				C2B1A5131E76D2850013F0A5 /* ListStudentViewController.swift in Sources */,
 				C2B1A5011E76CA0B0013F0A5 /* AppDelegate.swift in Sources */,
 				C2B1A5151E76D3B10013F0A5 /* Student.swift in Sources */,
+				C2F0FC251E93F2AB0024561F /* SQLiteHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,6 +328,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "IceteaViet.Week01-StudentManager";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Week01_StudentManager/StudentMangager_Bridging_Header.h;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -318,6 +341,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "IceteaViet.Week01-StudentManager";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Week01_StudentManager/StudentMangager_Bridging_Header.h;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
